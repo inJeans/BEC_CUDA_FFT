@@ -1,4 +1,4 @@
 BEC_CUDA_FFT
 ============
 
-A GPE solver using FFT's in the GPU
+A GPE solver using FFT's on the GPU
