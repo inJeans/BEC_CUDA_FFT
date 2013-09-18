@@ -24,7 +24,7 @@ INCLUDE = -I include/
 all: BEC_groundstate
 
 BEC_groundstate: BEC_evolve.o initial_cond.o operators.o matrix_functions.o differentiate.o
-	gcc -std=c99 -o $(addprefix $(BUILDDIR), $@) $(INCLUDE) $(FFTW_INC) $(CUDA_INC) $(FFTW_LIB) $(CUDA_LIB) $(addprefix $(BUILDDIR)$(OBJDIR), $?) -lcufft -lcufftw -lm
+	gcc -std=c99 -o $(addprefix $(BUILDDIR), $@) $(INCLUDE) $(FFTW_INC) $(FFTW_LIB) $(CUDA_LIB) $(addprefix $(BUILDDIR)$(OBJDIR), $?) -lcufft -lcufftw -lm
 
 BEC_evolve.o: $(addprefix $(SRCDIR), BEC_evolve.c ) 
 	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), BEC_evolve.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
@@ -39,7 +39,7 @@ matrix_functions.o: $(addprefix $(SRCDIR), matrix_functions.c )
 	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), matrix_functions.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
 differentiate.o: $(addprefix $(SRCDIR), differentiate.c )
-	gcc -std=c99 -c $(INCLUDE) $(CUDA_INC) $(addprefix $(SRCDIR), differentiate.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), differentiate.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
 clean:
 	rm -rf $(addprefix $(BUILDDIR)$(OBJDIR), *.o) $(addprefix $(BUILDDIR), BEC_groundstate)

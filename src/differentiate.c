@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <complex.h>
-//#include <fftw3.h>
-#include <cufftw.h>
+#include <fftw3.h>
+//#include <cufftw.h>
 
 //Designated header file with input parameters.
 #include "BEC_3D.h"
@@ -35,9 +35,9 @@ void D(fftw_complex *in, fftw_complex *c)
 				
 			for(l = 0; l < Xpoints; l++) {
 					
-			  //*(in + n * Ypoints * Xpoints + m * Xpoints + l) = *(in + n * Ypoints * Xpoints + m * Xpoints + l) * (*(c + n * Ypoints * Xpoints + m * Xpoints + l));
-			  *(in + n * Ypoints * Xpoints + m * Xpoints + l)[0] = *(in + n * Ypoints * Xpoints + m * Xpoints + l)[0] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[0]) - *(in + n * Ypoints * Xpoints + m * Xpoints + l)[1] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[1]);
-			  *(in + n * Ypoints * Xpoints + m * Xpoints + l)[1] = *(in + n * Ypoints * Xpoints + m * Xpoints + l)[0] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[1]) + *(in + n * Ypoints * Xpoints + m * Xpoints + l)[1] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[0]);
+			  *(in + n * Ypoints * Xpoints + m * Xpoints + l) = *(in + n * Ypoints * Xpoints + m * Xpoints + l) * (*(c + n * Ypoints * Xpoints + m * Xpoints + l));
+			  //*(in + n * Ypoints * Xpoints + m * Xpoints + l)[0] = *(in + n * Ypoints * Xpoints + m * Xpoints + l)[0] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[0]) - *(in + n * Ypoints * Xpoints + m * Xpoints + l)[1] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[1]);
+			  //*(in + n * Ypoints * Xpoints + m * Xpoints + l)[1] = *(in + n * Ypoints * Xpoints + m * Xpoints + l)[0] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[1]) + *(in + n * Ypoints * Xpoints + m * Xpoints + l)[1] * (*(c + n * Ypoints * Xpoints + m * Xpoints + l)[0]);
 			}
 		}			
 	}		
