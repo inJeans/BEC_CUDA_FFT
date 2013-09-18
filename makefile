@@ -1,12 +1,24 @@
-CUDA_INC = -I/usr/local/cuda-5.5/include
-CUDA_LIB = -L/usr/local/cuda-5.5/lib
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin) #If building on an OSX system
+    CUDA_INC = -I/Developer/NVIDIA/CUDA-5.5/include
+    CUDA_LIB = -L/Developer/NVIDIA/CUDA-5.5/lib
+else                     #If building on a Linux system
+    CUDA_INC = -I/usr/local/cuda-5.5/include
+    UNAME_P := $(shell uname -p)
+    ifeq ($(UNAME_P),x86_64)  #If 64 bit
+        CUDA_LIB = -L/usr/local/cuda-5.5/lib64
+    else
+        CUDA_LIB = -L/usr/local/cuda-5.5/lib
+    endif
+endif
+
 FFTW_INC = -I/usr/local/include
 FFTW_LIB = -L/usr/local/lib
 
 all: BEC_groundstate
 
 BEC_groundstate: BEC_evolve.o initial_cond.o operators.o matrix_functions.o differentiate.o
-	gcc -std=c99 -o $@ $(FFTW_INC) $(CUDA_INC) $(FFTW_LIB) $(CUDA_LIB) BEC_evolve.o initial_cond.o operators.o matrix_functions.o differentiate.o -lfftw3 -lcufft -lcufftw -lm
+	gcc -std=c99 -o $@ $(FFTW_INC) $(CUDA_INC) $(FFTW_LIB) $(CUDA_LIB) BEC_evolve.o initial_cond.o operators.o matrix_functions.o differentiate.o -lcufft -lcufftw -lm
 
 BEC_evolve.o: BEC_evolve.c 
 	gcc -std=c99 -c $(FFTW_INC) BEC_evolve.c
