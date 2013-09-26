@@ -15,7 +15,8 @@
 
 int main()
 {
-
+        cudaMalloc( (void**) &d_in, sizeof(fftw_complex) * Xpoints * Ypoints * Zpoints );
+	cudaMalloc( (void**) &d_c,  sizeof(fftw_complex) * Xpoints * Ypoints * Zpoints );
 /*-----------------------------Declaring variables & setting the initial conditions-----------------------------*/
 	
 	int i, j, k;
@@ -402,6 +403,9 @@ int main()
 	fclose(outputXY);
 	fclose(outputYZ);
 	fclose(phaseout);
+
+	cudaFree( d_in );
+	cudaFree( d_c  );
 
 	return 0;	
 }

@@ -3,9 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <math.h>
-#include <complex.h>									//This library is declared before fftw3.h
+//#include <complex.h>									//This library is declared before fftw3.h
 //#include <fftw3.h>										//The FFTW library
 //#include <cufftw.h>
+#include <cuda.h>
+#include <cuda_runtime.h>
 
 #define PI 3.141592654									//Defining pi
 
@@ -49,6 +51,8 @@
 #define Stotal (Sground + Svortex + Sevolve1 + Stilt + Sevolve2)
 #define Sprint ((Sground + Svortex + Sevolve1 + Stilt + Sevolve2) / printer)
 
+// Device pointers
+fftw_complex *d_in, *d_c;
 
 //Operators. See operators.c for function descriptions.
 void initial_cond(fftw_complex *w, double *v1, double *v2, double x[], double y[], double z[]);
@@ -64,9 +68,6 @@ void Ni(fftw_complex *w, double *v, double x[], double y[], double z[]);
 void Nr(fftw_complex *w, double *v1, double *v2, int step, double s, double x[], double y[], double z[]);
 
 void vortex(fftw_complex *q, double x[], double x0, double y[], double y0, double z[], int sign);
-
-
-
 
 //Matrix functions. See matrix_functions.c for descriptions.
 void weight_sum(double a, fftw_complex *q, double b, fftw_complex *r);

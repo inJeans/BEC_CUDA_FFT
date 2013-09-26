@@ -23,24 +23,28 @@ INCLUDE = -I include/
 
 all: BEC_groundstate
 
-BEC_groundstate: BEC_evolve.o initial_cond.o operators.o matrix_functions.o differentiate.o
-	gcc -std=c99 -o $(addprefix $(BUILDDIR), $@) $(INCLUDE) $(FFTW_INC) $(FFTW_LIB) $(CUDA_LIB) $(addprefix $(BUILDDIR)$(OBJDIR), $?) -lcufft -lcufftw -lm
+BEC_groundstate: initial_cond.o operators.o matrix_functions.o differentiate.o BEC_evolve.o 
+	nvcc -arch=compute_30 -code=sm_30 -o $(addprefix $(BUILDDIR), $@) $(INCLUDE) $(FFTW_INC) $(FFTW_LIB) $(CUDA_LIB) $(addprefix $(BUILDDIR)$(OBJDIR), $?) -lfftw3 -lcufft -lm
 #	gcc -std=c99 -o $(addprefix $(BUILDDIR), $@) $(INCLUDE) $(FFTW_INC) $(FFTW_LIB) $(CUDA_LIB) $(addprefix $(BUILDDIR)$(OBJDIR), $?) -lfftw3 -lm
 
 BEC_evolve.o: $(addprefix $(SRCDIR), BEC_evolve.c ) 
-	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), BEC_evolve.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+#	nvcc -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), BEC_evolve.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+	gcc -std=c99 -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), BEC_evolve.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
 initial_cond.o: $(addprefix $(SRCDIR), initial_cond.c )
-	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), initial_cond.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+#	nvcc -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), initial_cond.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+	gcc -std=c99 -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), initial_cond.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
 operators.o: $(addprefix $(SRCDIR), operators.c )
-	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), operators.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+	nvcc -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), operators.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
 matrix_functions.o: $(addprefix $(SRCDIR), matrix_functions.c )
-	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), matrix_functions.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+#	nvcc -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), matrix_functions.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+	gcc -std=c99 -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), matrix_functions.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
-differentiate.o: $(addprefix $(SRCDIR), differentiate.c )
-	gcc -std=c99 -c $(INCLUDE) $(FFTW_INC) $(addprefix $(SRCDIR), differentiate.c ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+differentiate.o: $(addprefix $(SRCDIR), differentiate.cu )
+	nvcc -arch=compute_30 -code=sm_30 -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), differentiate.cu ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
+#	gcc -std=c99 -c $(INCLUDE) $(CUDA_INC) $(FFTW_INC) $(addprefix $(SRCDIR), differentiate.cu ) -o $(addprefix $(BUILDDIR)$(OBJDIR), $@)
 
 clean:
 	rm -rf $(addprefix $(BUILDDIR)$(OBJDIR), *.o) $(addprefix $(BUILDDIR), BEC_groundstate)
